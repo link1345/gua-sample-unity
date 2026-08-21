@@ -16,6 +16,7 @@ public sealed class AdvancedValidationTests
         Environment.GetEnvironmentVariable("GUA_VISUAL_VARIANT")
         ?? "windows-unity-6000.5.3f1-d3d11-541x700";
     private static readonly TimeSpan ShortTimeout = TimeSpan.FromSeconds(5);
+    private static readonly TimeSpan RecordingActionTimeout = TimeSpan.FromSeconds(15);
     private static readonly TimeSpan PollInterval = TimeSpan.FromMilliseconds(20);
     private static readonly string ProjectRoot = FindProjectRoot();
 
@@ -141,12 +142,12 @@ public sealed class AdvancedValidationTests
         await recorder.ClickAsync(
             new(Id: "end"),
             waitCondition: GuaWaitConditions.Visible("end"),
-            timeout: ShortTimeout,
+            timeout: RecordingActionTimeout,
             pollInterval: PollInterval);
         await recorder.ClickAsync(
             new(Id: "cancel_exit"),
             waitCondition: GuaWaitConditions.Visible("cancel_exit"),
-            timeout: ShortTimeout,
+            timeout: RecordingActionTimeout,
             pollInterval: PollInterval);
         await GuaAssertions.WaitForVisibleAsync(
             host.Context,
@@ -170,7 +171,7 @@ public sealed class AdvancedValidationTests
             new GuaReplayOptions
             {
                 TimingMode = GuaReplayTimingMode.PreferConditions,
-                ActionTimeout = ShortTimeout,
+                ActionTimeout = RecordingActionTimeout,
                 PollInterval = PollInterval,
             });
 

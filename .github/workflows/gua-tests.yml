@@ -154,7 +154,7 @@ jobs:
         with:
           artifact-path: downloaded
           test-outcome: ${{ steps.visual-outcome.outputs.value }}
-          include-comparisons-on-success: ${{ inputs.visual-report-demo }}
+          include-comparisons-on-success: false
           upload-target: workflow
           workflow-artifact-name: gua-visual-report
 
@@ -165,7 +165,7 @@ jobs:
         with:
           artifact-path: downloaded
           test-outcome: ${{ steps.visual-outcome.outputs.value }}
-          include-comparisons-on-success: ${{ inputs.visual-report-demo }}
+          include-comparisons-on-success: ${{ inputs.visual-report-demo || false }}
           upload-target: pages
 
   deploy-visual-report:
