@@ -1,0 +1,183 @@
+name: Gua UI tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      visual-report-demo:
+        description: Publish an intentional pixel difference to the Pages viewer.
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  unity-tests:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    permissions:
+      contents: read
+    uses: link1345/gua-tester/.github/workflows/unity.yml@v2
+    with:
+      project-path: .
+      scene-path: Assets/Scenes/Main.unity
+      test-project: tests/GuaUiLab.Unity.Tests.csproj
+      artifact-key: unity-sample
+      unity-version: auto
+      gua-tag: gua-v0.15.0
+      artifact-path: artifacts/gua
+    secrets:
+      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+
+  visual-report-demo:
+    needs: unity-tests
+    if: github.event_name == 'workflow_dispatch' && inputs.visual-report-demo && needs.unity-tests.result == 'success'
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Set deterministic Windows display resolution
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          if ($null -eq (Get-Command Set-DisplayResolution -ErrorAction SilentlyContinue)) {
+            throw "Set-DisplayResolution is unavailable on this Windows runner image."
+          }
+          Set-DisplayResolution -Width 1920 -Height 1080 -Force
+          Add-Type -AssemblyName System.Windows.Forms
+          $bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+          if ($bounds.Width -ne 1920 -or $bounds.Height -ne 1080) {
+            throw "Windows display resolution is $($bounds.Width)x$($bounds.Height); expected 1920x1080."
+          }
+
+      - name: Download Unity Player
+        uses: actions/download-artifact@v4
+        with:
+          name: gua-unity-player-${{ github.run_id }}-${{ github.run_attempt }}-unity-sample
+          path: artifacts/unity-player
+
+      - name: Locate Unity Player
+        id: player
+        shell: pwsh
+        run: |
+          $player = Get-ChildItem -LiteralPath artifacts/unity-player -Filter GuaPlayer.exe -Recurse -File | Select-Object -First 1
+          if ($null -eq $player) {
+            throw "Downloaded Unity Player executable was not found."
+          }
+          "path=$($player.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Restore Unity tests
+        shell: pwsh
+        run: dotnet restore tests/GuaUiLab.Unity.Tests.csproj
+
+      - name: Generate intentional Unity visual difference
+        shell: pwsh
+        env:
+          GUA_UNITY_PLAYER: ${{ steps.player.outputs.path }}
+          GUA_UNITY_ARTIFACT_PLAYER: ${{ steps.player.outputs.path }}
+          GUA_VISUAL_REPORT_DEMO: "1"
+        run: >-
+          dotnet test tests/GuaUiLab.Unity.Tests.csproj
+          --configuration Release
+          --no-restore
+          --filter VisualReportViewerDemoProducesPixelDifferenceArtifact
+          --results-directory artifacts/test-results-demo
+          --logger "trx;LogFileName=unity-visual-demo.trx"
+
+      - name: Upload Unity visual demo artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gua-unity-demo-${{ github.run_id }}-${{ github.run_attempt }}-unity-sample
+          path: |
+            artifacts/test-results-demo
+            artifacts/gua
+          if-no-files-found: warn
+
+  visual-report:
+    needs:
+      - unity-tests
+      - visual-report-demo
+    if: always() && needs.unity-tests.result != 'skipped'
+    runs-on: ubuntu-latest
+    outputs:
+      pages-ready: ${{ steps.pages-report.outcome == 'success' }}
+    steps:
+      - name: Download Unity test diagnostics
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: gua-unity-test-${{ github.run_id }}-${{ github.run_attempt }}-unity-sample
+          path: downloaded/normal
+
+      - name: Download Unity visual demo diagnostics
+        if: github.event_name == 'workflow_dispatch' && inputs.visual-report-demo
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: gua-unity-demo-${{ github.run_id }}-${{ github.run_attempt }}-unity-sample
+          path: downloaded/demo
+
+      - name: Normalize visual report outcome
+        id: visual-outcome
+        shell: pwsh
+        env:
+          UNITY_OUTCOME: ${{ needs.unity-tests.result }}
+          DEMO_OUTCOME: ${{ needs.visual-report-demo.result }}
+          VISUAL_REPORT_DEMO: ${{ inputs.visual-report-demo }}
+        run: |
+          $outcome = if ($env:UNITY_OUTCOME -in @("success", "failure", "cancelled")) {
+            $env:UNITY_OUTCOME
+          } else {
+            "failure"
+          }
+          if ($env:DEMO_OUTCOME -eq "failure" -or $env:VISUAL_REPORT_DEMO -eq "true") {
+            $outcome = "failure"
+          }
+          "value=$outcome" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Upload pull-request visual report
+        if: github.event_name == 'pull_request' && steps.visual-outcome.outputs.value == 'failure'
+        uses: link1345/gua-tester/visual-report@v2
+        with:
+          artifact-path: downloaded
+          test-outcome: ${{ steps.visual-outcome.outputs.value }}
+          upload-target: workflow
+          workflow-artifact-name: gua-visual-report
+
+      - name: Prepare latest main visual report
+        id: pages-report
+        if: always() && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
+        uses: link1345/gua-tester/visual-report@v2
+        with:
+          artifact-path: downloaded
+          test-outcome: ${{ steps.visual-outcome.outputs.value }}
+          upload-target: pages
+
+  deploy-visual-report:
+    needs: visual-report
+    if: always() && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && needs.visual-report.outputs.pages-ready == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy visual report
+        id: deployment
+        uses: actions/deploy-pages@v4

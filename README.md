@@ -51,6 +51,23 @@ dotnet test tests\GuaUiLab.Unity.Tests.csproj --filter VisualReportViewerDemoPro
 Remove-Item Env:GUA_VISUAL_REPORT_DEMO
 ```
 
+## GitHub Actions
+
+`.github/workflows/gua-tests.yml`で[`link1345/gua-tester`](https://github.com/link1345/gua-tester) v2を使用し、`main`へのpushとpull requestでUnity 6のWindows x64 Mono PlayerをビルドしてUIテストを実行します。Unity Playerのビルドにはrepository secretsの`UNITY_EMAIL`、`UNITY_PASSWORD`と、Personal用の`UNITY_LICENSE`またはProfessional用の`UNITY_SERIAL`が必要です。
+
+forkからのpull requestではUnity credentialsを渡さず、Unity jobをスキップします。`pull_request_target`は使用しません。
+
+### Visual差分Viewer
+
+pull requestでVisual比較が失敗すると、`visual-report@v2`が`comparison.json`とPNGを静的Viewerへ変換し、`gua-visual-report`というActions artifactとして保存します。通常のUnity build log、Player、TRX、Gua診断・Visual成果物も`gua-tester` v2のworkflow artifactとして保存されます。
+
+`main`へのpushと手動実行では、最新結果をGitHub Pages artifactとしてアップロードし、専用jobからPagesへdeployします。repositoryのPages sourceを事前に **GitHub Actions** へ設定してください。
+
+手動実行で`visual-report-demo`を有効にすると、通常テストでビルド済みのUnity Playerを再利用し、`VisualReportViewerDemoProducesPixelDifferenceArtifact`でtitle画面とloading画面の意図的なpixel差分を生成します。テスト自体は期待した比較失敗を検証して成功し、ViewerにはExpected／Diff／Actualが表示されます。
+
+> [!WARNING]
+> screenshotにはゲーム画面へ描画された秘密情報や個人情報が含まれる可能性があります。特にpublic repositoryでPagesを有効にする前に、公開内容を確認してください。
+
 ## Guaで公開する主要ノード
 
 | ID | 役割 | 画面 |
