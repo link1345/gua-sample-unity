@@ -137,14 +137,13 @@ jobs:
         env:
           UNITY_OUTCOME: ${{ needs.unity-tests.result }}
           DEMO_OUTCOME: ${{ needs.visual-report-demo.result }}
-          VISUAL_REPORT_DEMO: ${{ inputs.visual-report-demo }}
         run: |
           $outcome = if ($env:UNITY_OUTCOME -in @("success", "failure", "cancelled")) {
             $env:UNITY_OUTCOME
           } else {
             "failure"
           }
-          if ($env:DEMO_OUTCOME -eq "failure" -or $env:VISUAL_REPORT_DEMO -eq "true") {
+          if ($env:DEMO_OUTCOME -eq "failure") {
             $outcome = "failure"
           }
           "value=$outcome" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
@@ -155,6 +154,7 @@ jobs:
         with:
           artifact-path: downloaded
           test-outcome: ${{ steps.visual-outcome.outputs.value }}
+          include-comparisons-on-success: ${{ inputs.visual-report-demo }}
           upload-target: workflow
           workflow-artifact-name: gua-visual-report
 
@@ -165,6 +165,7 @@ jobs:
         with:
           artifact-path: downloaded
           test-outcome: ${{ steps.visual-outcome.outputs.value }}
+          include-comparisons-on-success: ${{ inputs.visual-report-demo }}
           upload-target: pages
 
   deploy-visual-report:
