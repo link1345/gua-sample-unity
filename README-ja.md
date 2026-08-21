@@ -1,5 +1,7 @@
 # Gua UI Lab for Unity
 
+日本語 | [English](README.md)
+
 これは [Gua](https://github.com/link1345/gua) のUnity版サンプルプロジェクトです。
 [`gua-sample-godot`](https://github.com/link1345/gua-sample-godot) と同じ画像素材、画面構成、操作フローをUnity 6のuGUIで再現しています。
 

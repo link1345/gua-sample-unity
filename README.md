@@ -1,5 +1,7 @@
 # Gua UI Lab for Unity
 
+English | [日本語](README-ja.md)
+
 This is a Unity sample project for [Gua](https://github.com/link1345/gua). It recreates the same visual assets, screen layout, and interaction flow as [`gua-sample-godot`](https://github.com/link1345/gua-sample-godot) using Unity 6 and uGUI.
 
 `Start` opens the second screen, where `Back` remains disabled during a six-second `Loading....` state. After loading finishes, `Back` returns to the first screen. `End` opens an exit confirmation dialog; `Cancel` closes it, and `OK` exits the application.
