@@ -54,13 +54,13 @@ Remove-Item Env:GUA_VISUAL_REPORT_DEMO
 
 ## GitHub Actions
 
-`.github/workflows/gua-tests.yml` uses [`link1345/gua-tester`](https://github.com/link1345/gua-tester) v2 to build a Unity 6 Windows x64 Mono Player and run UI tests on pushes to `main` and on pull requests. Building the Unity Player requires the repository secrets `UNITY_EMAIL`, `UNITY_PASSWORD`, and either `UNITY_LICENSE` for a Personal license or `UNITY_SERIAL` for a Professional license.
+`.github/workflows/gua-tests.yml` uses [`link1345/gua-tester`](https://github.com/link1345/gua-tester) v2.1 to build a Unity 6 Windows x64 Mono Player and run UI tests on pushes to `main` and on pull requests. Building the Unity Player requires the repository secrets `UNITY_EMAIL`, `UNITY_PASSWORD`, and either `UNITY_LICENSE` for a Personal license or `UNITY_SERIAL` for a Professional license.
 
 Pull requests from forks do not receive Unity credentials, so the Unity job is skipped. The workflow does not use `pull_request_target`.
 
 ### Visual difference viewer
 
-When a visual comparison fails in a pull request, `visual-report@v2` turns `comparison.json` and its PNGs into a static viewer and stores it as the `gua-visual-report` Actions artifact. The normal Unity build log, Player, TRX file, and Gua diagnostic and visual artifacts are also stored in the `gua-tester` v2 workflow artifact.
+When a visual comparison fails in a pull request, `visual-report@v2.1` turns `comparison.json` and its PNGs into a static viewer and stores it as the `gua-visual-report` Actions artifact. The normal Unity build log, Player, TRX file, and Gua diagnostic and visual artifacts are also stored in the `gua-tester` v2.1 workflow artifact.
 
 On pushes to `main` and manual runs, the latest report is uploaded as a GitHub Pages artifact and deployed by a dedicated job. Configure the repository's Pages source as **GitHub Actions** first.
 

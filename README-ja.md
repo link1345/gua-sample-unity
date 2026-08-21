@@ -55,13 +55,13 @@ Remove-Item Env:GUA_VISUAL_REPORT_DEMO
 
 ## GitHub Actions
 
-`.github/workflows/gua-tests.yml`で[`link1345/gua-tester`](https://github.com/link1345/gua-tester) v2を使用し、`main`へのpushとpull requestでUnity 6のWindows x64 Mono PlayerをビルドしてUIテストを実行します。Unity Playerのビルドにはrepository secretsの`UNITY_EMAIL`、`UNITY_PASSWORD`と、Personal用の`UNITY_LICENSE`またはProfessional用の`UNITY_SERIAL`が必要です。
+`.github/workflows/gua-tests.yml`で[`link1345/gua-tester`](https://github.com/link1345/gua-tester) v2.1を使用し、`main`へのpushとpull requestでUnity 6のWindows x64 Mono PlayerをビルドしてUIテストを実行します。Unity Playerのビルドにはrepository secretsの`UNITY_EMAIL`、`UNITY_PASSWORD`と、Personal用の`UNITY_LICENSE`またはProfessional用の`UNITY_SERIAL`が必要です。
 
 forkからのpull requestではUnity credentialsを渡さず、Unity jobをスキップします。`pull_request_target`は使用しません。
 
 ### Visual差分Viewer
 
-pull requestでVisual比較が失敗すると、`visual-report@v2`が`comparison.json`とPNGを静的Viewerへ変換し、`gua-visual-report`というActions artifactとして保存します。通常のUnity build log、Player、TRX、Gua診断・Visual成果物も`gua-tester` v2のworkflow artifactとして保存されます。
+pull requestでVisual比較が失敗すると、`visual-report@v2.1`が`comparison.json`とPNGを静的Viewerへ変換し、`gua-visual-report`というActions artifactとして保存します。通常のUnity build log、Player、TRX、Gua診断・Visual成果物も`gua-tester` v2.1のworkflow artifactとして保存されます。
 
 `main`へのpushと手動実行では、最新結果をGitHub Pages artifactとしてアップロードし、専用jobからPagesへdeployします。repositoryのPages sourceを事前に **GitHub Actions** へ設定してください。
 
