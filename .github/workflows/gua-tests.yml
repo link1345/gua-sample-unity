@@ -27,7 +27,7 @@ jobs:
       test-project: tests/GuaUiLab.Unity.Tests.csproj
       artifact-key: unity-sample
       unity-version: auto
-      gua-tag: gua-v1.18.0
+      gua-tag: gua-v0.18.0
       artifact-path: artifacts/gua
     secrets:
       UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
