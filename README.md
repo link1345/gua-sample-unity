@@ -8,7 +8,7 @@ This is a Unity sample project for [Gua](https://github.com/link1345/gua). It re
 
 The window is resizable. The UI scales uniformly while preserving its 541×857 design aspect ratio, and any space outside that ratio is rendered as black letterboxing.
 
-UI automation uses the Gua v1.18.0 Unity UPM package. At runtime, it opens a Gua bridge at `ws://127.0.0.1:8765` by default and automatically exposes the standard uGUI tree. Set the `GUA_BRIDGE_PORT` environment variable to use a different port.
+UI automation uses the Gua v0.18.0 Unity UPM package. At runtime, it opens a Gua bridge at `ws://127.0.0.1:8765` by default and automatically exposes the standard uGUI tree. Set the `GUA_BRIDGE_PORT` environment variable to use a different port.
 
 ## Run the sample
 
@@ -16,7 +16,7 @@ UI automation uses the Gua v1.18.0 Unity UPM package. At runtime, it opens a Gua
 2. Open `Assets/Scenes/Main.unity` with Unity `6000.5.3f1`.
 3. Enter Play Mode.
 
-The official UPM package v1.18.0, including the managed assemblies and Windows x64 native libraries, is pinned in `Packages/com.link1345.gua`. No adjacent Gua source repository or separate package download is required.
+The official UPM package v0.18.0, including the managed assemblies and Windows x64 native libraries, is pinned in `Packages/com.link1345.gua`. No adjacent Gua source repository or separate package download is required.
 
 ## UI tests
 
@@ -81,4 +81,4 @@ Enable `visual-report-demo` in a manual run to reuse the Unity Player from the n
 | `cancel_exit` | button | Exit confirmation |
 | `confirm_exit` | button | Exit confirmation |
 
-This sample targets Windows x64 and Mono, matching the validated Unity configuration in Gua v1.18.0. IL2CPP and non-Windows Players are outside the sample's validated scope.
+This sample targets Windows x64 and Mono, matching the validated Unity configuration in Gua v0.18.0. IL2CPP and non-Windows Players are outside the sample's validated scope.
