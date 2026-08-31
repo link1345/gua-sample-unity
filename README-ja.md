@@ -17,7 +17,7 @@ UI自動化にはGua v1.0.4のUnity UPMパッケージを使用しています�
 2. Unity `6000.5.3f1`で `Assets/Scenes/Main.unity` を開きます。
 3. Playを押します。
 
-Guaの管理DLLとWindows x64ネイティブDLLを含む公式UPMパッケージ v1.0.4は `Packages/com.link1345.gua` に固定しています。そのため、隣接するGuaソースリポジトリへの参照や別途のパッケージダウンロードは不要です。
+Guaの管理DLLとWindows／Linux x64 native libraryを含む公式UPMパッケージ v1.0.4は `Packages/com.link1345.gua` に固定しています。そのため、隣接するGuaソースリポジトリへの参照や別途のパッケージダウンロードは不要です。
 
 ## UIテスト
 
@@ -55,7 +55,7 @@ Remove-Item Env:GUA_VISUAL_REPORT_DEMO
 
 ## GitHub Actions
 
-`.github/workflows/gua-tests.yml`で[`link1345/gua-tester`](https://github.com/link1345/gua-tester) v3.1を使用し、`main`へのpushとpull requestでUnity 6のWindows x64 Mono PlayerをビルドしてUIテストを実行します。Unity Playerのビルドにはrepository secretsの`UNITY_EMAIL`、`UNITY_PASSWORD`と、Personal用の`UNITY_LICENSE`またはProfessional用の`UNITY_SERIAL`が必要です。
+`.github/workflows/gua-tests.yml`で[`link1345/gua-tester`](https://github.com/link1345/gua-tester) v3.1を使用し、`main`へのpushとpull requestでUnity 6のLinux x64 Mono Playerをビルドし、Xvfb上でUIテストを実行します。Unity Playerのビルドにはrepository secretsの`UNITY_EMAIL`、`UNITY_PASSWORD`と、Personal用の`UNITY_LICENSE`またはProfessional用の`UNITY_SERIAL`が必要です。
 
 forkからのpull requestではUnity credentialsを渡さず、Unity jobをスキップします。`pull_request_target`は使用しません。
 
@@ -82,4 +82,4 @@ pull requestでVisual比較が失敗すると、`visual-report@v3.1`が`comparis
 | `cancel_exit` | button | 終了確認 |
 | `confirm_exit` | button | 終了確認 |
 
-Gua v1.0.4で検証するUnity構成に合わせ、Windows x64・Monoを対象にしています。IL2CPPとWindows以外のPlayerはこのサンプルの検証対象外です。
+Gua v1.0.4のクロスプラットフォームUnity構成に合わせ、CIではLinux x64・Monoを対象にしています。IL2CPPはこのサンプルの検証対象外です。

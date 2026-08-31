@@ -26,7 +26,7 @@ jobs:
       scene-path: Assets/Scenes/Main.unity
       test-project: tests/GuaUiLab.Unity.Tests.csproj
       artifact-key: unity-sample
-      platform: WindowsX64
+      platform: LinuxX64
       unity-version: auto
       gua-tag: gua-v1.0.4
       artifact-path: artifacts/gua
@@ -39,7 +39,7 @@ jobs:
   visual-report-demo:
     needs: unity-tests
     if: github.event_name == 'workflow_dispatch' && inputs.visual-report-demo && needs.unity-tests.result == 'success'
-    runs-on: windows-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     steps:
       - name: Check out repository
@@ -49,20 +49,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-
-      - name: Set deterministic Windows display resolution
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = "Stop"
-          if ($null -eq (Get-Command Set-DisplayResolution -ErrorAction SilentlyContinue)) {
-            throw "Set-DisplayResolution is unavailable on this Windows runner image."
-          }
-          Set-DisplayResolution -Width 1920 -Height 1080 -Force
-          Add-Type -AssemblyName System.Windows.Forms
-          $bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
-          if ($bounds.Width -ne 1920 -or $bounds.Height -ne 1080) {
-            throw "Windows display resolution is $($bounds.Width)x$($bounds.Height); expected 1920x1080."
-          }
 
       - name: Download Unity Player
         uses: actions/download-artifact@v4
@@ -74,14 +60,15 @@ jobs:
         id: player
         shell: pwsh
         run: |
-          $player = Get-ChildItem -LiteralPath artifacts/unity-player -Filter GuaPlayer.exe -Recurse -File | Select-Object -First 1
+          $player = Get-ChildItem -LiteralPath artifacts/unity-player -Filter GuaPlayer -Recurse -File | Select-Object -First 1
           if ($null -eq $player) {
             throw "Downloaded Unity Player executable was not found."
           }
+          chmod +x $player.FullName
           "path=$($player.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
       - name: Restore Unity tests
-        shell: pwsh
+        shell: bash
         run: dotnet restore tests/GuaUiLab.Unity.Tests.csproj
 
       - name: Generate intentional Unity visual difference
@@ -91,7 +78,7 @@ jobs:
           GUA_UNITY_ARTIFACT_PLAYER: ${{ steps.player.outputs.path }}
           GUA_VISUAL_REPORT_DEMO: "1"
         run: >-
-          dotnet test tests/GuaUiLab.Unity.Tests.csproj
+          xvfb-run --auto-servernum dotnet test tests/GuaUiLab.Unity.Tests.csproj
           --configuration Release
           --no-restore
           --filter VisualReportViewerDemoProducesPixelDifferenceArtifact

@@ -16,7 +16,7 @@ UI automation uses the Gua v1.0.4 Unity UPM package. At runtime, it opens a Gua 
 2. Open `Assets/Scenes/Main.unity` with Unity `6000.5.3f1`.
 3. Enter Play Mode.
 
-The official UPM package v1.0.4, including the managed assemblies and Windows x64 native libraries, is pinned in `Packages/com.link1345.gua`. No adjacent Gua source repository or separate package download is required.
+The official UPM package v1.0.4, including the managed assemblies and Windows and Linux x64 native libraries, is pinned in `Packages/com.link1345.gua`. No adjacent Gua source repository or separate package download is required.
 
 ## UI tests
 
@@ -54,7 +54,7 @@ Remove-Item Env:GUA_VISUAL_REPORT_DEMO
 
 ## GitHub Actions
 
-`.github/workflows/gua-tests.yml` uses [`link1345/gua-tester`](https://github.com/link1345/gua-tester) v3.1 to build a Unity 6 Windows x64 Mono Player and run UI tests on pushes to `main` and on pull requests. Building the Unity Player requires the repository secrets `UNITY_EMAIL`, `UNITY_PASSWORD`, and either `UNITY_LICENSE` for a Personal license or `UNITY_SERIAL` for a Professional license.
+`.github/workflows/gua-tests.yml` uses [`link1345/gua-tester`](https://github.com/link1345/gua-tester) v3.1 to build a Unity 6 Linux x64 Mono Player and run UI tests under Xvfb on pushes to `main` and on pull requests. Building the Unity Player requires the repository secrets `UNITY_EMAIL`, `UNITY_PASSWORD`, and either `UNITY_LICENSE` for a Personal license or `UNITY_SERIAL` for a Professional license.
 
 Pull requests from forks do not receive Unity credentials, so the Unity job is skipped. The workflow does not use `pull_request_target`.
 
@@ -81,4 +81,4 @@ Enable `visual-report-demo` in a manual run to reuse the Unity Player from the n
 | `cancel_exit` | button | Exit confirmation |
 | `confirm_exit` | button | Exit confirmation |
 
-This sample targets Windows x64 and Mono, matching the validated Unity configuration in Gua v1.0.4. IL2CPP and non-Windows Players are outside the sample's validated scope.
+This sample's CI targets Linux x64 and Mono, matching the cross-platform Unity configuration in Gua v1.0.4. IL2CPP remains outside the sample's validated scope.

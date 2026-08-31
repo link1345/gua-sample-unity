@@ -14,7 +14,9 @@ public sealed class AdvancedValidationTests
     private const int RenderedHeight = 700;
     private static readonly string VisualVariant =
         Environment.GetEnvironmentVariable("GUA_VISUAL_VARIANT")
-        ?? "windows-unity-6000.5.3f1-d3d11-541x700";
+        ?? (OperatingSystem.IsLinux()
+            ? "unity-LinuxX64"
+            : "windows-unity-6000.5.3f1-d3d11-541x700");
     private static readonly TimeSpan ShortTimeout = TimeSpan.FromSeconds(5);
     private static readonly TimeSpan RecordingActionTimeout = TimeSpan.FromSeconds(15);
     private static readonly TimeSpan PollInterval = TimeSpan.FromMilliseconds(20);
@@ -76,7 +78,7 @@ public sealed class AdvancedValidationTests
             "visual-report-demo-baselines");
         var artifactDirectory = Path.Combine(ProjectRoot, "artifacts", "gua");
         const string comparisonName = "visual-report-viewer-demo";
-        const string variant = "windows-unity-6000.5.3f1-d3d11-541x700";
+        var variant = VisualVariant;
         var comparisonArtifactDirectory = Path.Combine(artifactDirectory, comparisonName);
 
         await GuaVisualAssertions.ExpectScreenshotAsync(
