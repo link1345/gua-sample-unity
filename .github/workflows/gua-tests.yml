@@ -20,12 +20,13 @@ jobs:
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     permissions:
       contents: read
-    uses: link1345/gua-tester/.github/workflows/unity.yml@v2.2
+    uses: link1345/gua-tester/.github/workflows/unity.yml@v3
     with:
       project-path: .
       scene-path: Assets/Scenes/Main.unity
       test-project: tests/GuaUiLab.Unity.Tests.csproj
       artifact-key: unity-sample
+      platform: WindowsX64
       unity-version: auto
       gua-tag: gua-v1.18.0
       artifact-path: artifacts/gua
@@ -150,7 +151,7 @@ jobs:
 
       - name: Upload pull-request visual report
         if: github.event_name == 'pull_request' && steps.visual-outcome.outputs.value == 'failure'
-        uses: link1345/gua-tester/visual-report@v2.2
+        uses: link1345/gua-tester/visual-report@v3
         with:
           artifact-path: downloaded
           test-outcome: ${{ steps.visual-outcome.outputs.value }}
@@ -161,7 +162,7 @@ jobs:
       - name: Prepare latest main visual report
         id: pages-report
         if: always() && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
-        uses: link1345/gua-tester/visual-report@v2.2
+        uses: link1345/gua-tester/visual-report@v3
         with:
           artifact-path: downloaded
           test-outcome: ${{ steps.visual-outcome.outputs.value }}
