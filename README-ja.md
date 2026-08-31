@@ -9,7 +9,7 @@
 
 ウィンドウはリサイズ可能です。541×857のデザイン比率を維持して一様に拡大・縮小し、画面比率から余る領域は黒いレターボックスとして表示します。
 
-UI自動化にはGua v1.18.0のUnity UPMパッケージを使用しています。実行中は既定で `ws://127.0.0.1:8765` にGua bridgeを開き、標準uGUIツリーを自動的に公開します。ポートは環境変数 `GUA_BRIDGE_PORT` で変更できます。
+UI自動化にはGua v1.0.4のUnity UPMパッケージを使用しています。実行中は既定で `ws://127.0.0.1:8765` にGua bridgeを開き、標準uGUIツリーを自動的に公開します。ポートは環境変数 `GUA_BRIDGE_PORT` で変更できます。
 
 ## 実行
 
@@ -17,7 +17,7 @@ UI自動化にはGua v1.18.0のUnity UPMパッケージを使用しています�
 2. Unity `6000.5.3f1`で `Assets/Scenes/Main.unity` を開きます。
 3. Playを押します。
 
-Guaの管理DLLとWindows x64ネイティブDLLを含む公式UPMパッケージ v1.18.0は `Packages/com.link1345.gua` に固定しています。そのため、隣接するGuaソースリポジトリへの参照や別途のパッケージダウンロードは不要です。
+Guaの管理DLLとWindows x64ネイティブDLLを含む公式UPMパッケージ v1.0.4は `Packages/com.link1345.gua` に固定しています。そのため、隣接するGuaソースリポジトリへの参照や別途のパッケージダウンロードは不要です。
 
 ## UIテスト
 
@@ -55,13 +55,13 @@ Remove-Item Env:GUA_VISUAL_REPORT_DEMO
 
 ## GitHub Actions
 
-`.github/workflows/gua-tests.yml`で[`link1345/gua-tester`](https://github.com/link1345/gua-tester) v2.2を使用し、`main`へのpushとpull requestでUnity 6のWindows x64 Mono PlayerをビルドしてUIテストを実行します。Unity Playerのビルドにはrepository secretsの`UNITY_EMAIL`、`UNITY_PASSWORD`と、Personal用の`UNITY_LICENSE`またはProfessional用の`UNITY_SERIAL`が必要です。
+`.github/workflows/gua-tests.yml`で[`link1345/gua-tester`](https://github.com/link1345/gua-tester) v3.1を使用し、`main`へのpushとpull requestでUnity 6のWindows x64 Mono PlayerをビルドしてUIテストを実行します。Unity Playerのビルドにはrepository secretsの`UNITY_EMAIL`、`UNITY_PASSWORD`と、Personal用の`UNITY_LICENSE`またはProfessional用の`UNITY_SERIAL`が必要です。
 
 forkからのpull requestではUnity credentialsを渡さず、Unity jobをスキップします。`pull_request_target`は使用しません。
 
 ### Visual差分Viewer
 
-pull requestでVisual比較が失敗すると、`visual-report@v2.2`が`comparison.json`とPNGを静的Viewerへ変換し、`gua-visual-report`というActions artifactとして保存します。通常のUnity build log、Player、TRX、Gua診断・Visual成果物も`gua-tester` v2.2のworkflow artifactとして保存されます。
+pull requestでVisual比較が失敗すると、`visual-report@v3.1`が`comparison.json`とPNGを静的Viewerへ変換し、`gua-visual-report`というActions artifactとして保存します。通常のUnity build log、Player、TRX、Gua診断・Visual成果物も`gua-tester` v3.1のworkflow artifactとして保存されます。
 
 `main`へのpushと手動実行では、最新結果をGitHub Pages artifactとしてアップロードし、専用jobからPagesへdeployします。repositoryのPages sourceを事前に **GitHub Actions** へ設定してください。
 
@@ -82,4 +82,4 @@ pull requestでVisual比較が失敗すると、`visual-report@v2.2`が`comparis
 | `cancel_exit` | button | 終了確認 |
 | `confirm_exit` | button | 終了確認 |
 
-Gua v1.18.0で検証するUnity構成に合わせ、Windows x64・Monoを対象にしています。IL2CPPとWindows以外のPlayerはこのサンプルの検証対象外です。
+Gua v1.0.4で検証するUnity構成に合わせ、Windows x64・Monoを対象にしています。IL2CPPとWindows以外のPlayerはこのサンプルの検証対象外です。
