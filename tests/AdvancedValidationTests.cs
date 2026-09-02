@@ -220,6 +220,7 @@ public sealed class AdvancedValidationTests
                 RenderedHeight.ToString(),
                 "-screen-fullscreen",
                 "0",
+                "-noaudio",
             ],
         });
     }
