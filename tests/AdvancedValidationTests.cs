@@ -212,7 +212,6 @@ public sealed class AdvancedValidationTests
             TeardownResetPolicy = GuaResetPolicy.Strict,
             CaptureDiagnosticsBeforeTeardown = true,
             DiagnosticsOutputDirectory = Path.Combine(ProjectRoot, "artifacts", "gua"),
-            EnvironmentVariables = CreatePlayerEnvironment(),
             AdditionalArguments =
             [
                 "-screen-width",
@@ -223,30 +222,6 @@ public sealed class AdvancedValidationTests
                 "0",
             ],
         });
-    }
-
-    private static IReadOnlyDictionary<string, string> CreatePlayerEnvironment()
-    {
-        if (!OperatingSystem.IsLinux())
-        {
-            return new Dictionary<string, string>();
-        }
-
-        var alsaConfigPath = Path.Combine(Path.GetTempPath(), "gua-unity-alsa-null.conf");
-        File.WriteAllText(
-            alsaConfigPath,
-            """
-            pcm.!default {
-                type null
-            }
-            ctl.!default {
-                type null
-            }
-            """);
-        return new Dictionary<string, string>
-        {
-            ["ALSA_CONFIG_PATH"] = alsaConfigPath,
-        };
     }
 
     private static IDisposable CreateAssertionScope(UnitySceneTestHost host)

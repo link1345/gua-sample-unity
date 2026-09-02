@@ -18,6 +18,7 @@ public static class GuaUiLab
         if (Object.FindFirstObjectByType<GuaUiLabController>() != null)
             return;
 
+        Debug.developerConsoleEnabled = false;
         Application.runInBackground = true;
         Application.targetFrameRate = 60;
         _font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
