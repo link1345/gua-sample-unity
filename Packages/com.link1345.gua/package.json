@@ -1,6 +1,6 @@
 {
   "name": "com.link1345.gua",
-  "version": "1.0.4",
+  "version": "1.0.7",
   "displayName": "Gua Runtime UI Automation",
   "description": "Managed Unity adapter for the Gua runtime UI automation protocol.",
   "unity": "6000.5",
@@ -8,7 +8,8 @@
     "com.unity.ugui": "2.0.0",
     "com.unity.modules.uielements": "1.0.0",
     "com.unity.modules.screencapture": "1.0.0",
-    "com.unity.modules.imageconversion": "1.0.0"
+    "com.unity.modules.imageconversion": "1.0.0",
+    "com.unity.inputsystem": "1.20.0"
   },
   "samples": [
     {

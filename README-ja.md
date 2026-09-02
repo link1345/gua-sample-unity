@@ -9,7 +9,7 @@
 
 ウィンドウはリサイズ可能です。541×857のデザイン比率を維持して一様に拡大・縮小し、画面比率から余る領域は黒いレターボックスとして表示します。
 
-UI自動化にはGua v1.0.4のUnity UPMパッケージを使用しています。実行中は既定で `ws://127.0.0.1:8765` にGua bridgeを開き、標準uGUIツリーを自動的に公開します。ポートは環境変数 `GUA_BRIDGE_PORT` で変更できます。
+UI自動化にはGua v1.0.7のUnity UPMパッケージを使用しています。実行中は既定で `ws://127.0.0.1:8765` にGua bridgeを開き、標準uGUIツリーを自動的に公開します。ポートは環境変数 `GUA_BRIDGE_PORT` で変更できます。
 
 ## 実行
 
@@ -17,7 +17,7 @@ UI自動化にはGua v1.0.4のUnity UPMパッケージを使用しています�
 2. Unity `6000.5.3f1`で `Assets/Scenes/Main.unity` を開きます。
 3. Playを押します。
 
-Guaの管理DLLとWindows／Linux x64 native libraryを含む公式UPMパッケージ v1.0.4は `Packages/com.link1345.gua` に固定しています。そのため、隣接するGuaソースリポジトリへの参照や別途のパッケージダウンロードは不要です。
+Guaの管理DLLとWindows／Linux x64 native libraryを含む公式UPMパッケージ v1.0.7は `Packages/com.link1345.gua` に固定しています。そのため、隣接するGuaソースリポジトリへの参照や別途のパッケージダウンロードは不要です。
 
 ## UIテスト
 
@@ -82,4 +82,4 @@ pull requestでVisual比較が失敗すると、`visual-report@v3.1`が`comparis
 | `cancel_exit` | button | 終了確認 |
 | `confirm_exit` | button | 終了確認 |
 
-Gua v1.0.4のクロスプラットフォームUnity構成に合わせ、CIではLinux x64・Monoを対象にしています。IL2CPPはこのサンプルの検証対象外です。
+Gua v1.0.7のクロスプラットフォームUnity構成に合わせ、CIではLinux x64・Monoを対象にしています。IL2CPPはこのサンプルの検証対象外です。

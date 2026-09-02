@@ -28,7 +28,7 @@ jobs:
       artifact-key: unity-sample
       platform: LinuxX64
       unity-version: auto
-      gua-tag: gua-v1.0.4
+      gua-tag: gua-v1.0.7
       artifact-path: artifacts/gua
     secrets:
       UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
